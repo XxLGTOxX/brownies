@@ -21,7 +21,10 @@ app = FastAPI(title="Brownies Sales Manager", lifespan=lifespan)
 app.add_middleware(SessionMiddleware, secret_key=SECRET_KEY)
 
 # Static files
-os.makedirs("static", exist_ok=True)
+# Static files
+# The `static` directory is included in the repository. Avoid creating
+# directories at import time because Vercel's serverless runtime has a
+# read-only filesystem. If runtime writes are needed use `/tmp` instead.
 app.mount("/static", StaticFiles(directory="static"), name="static")
 
 # Templates
