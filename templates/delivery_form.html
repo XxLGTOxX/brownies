@@ -1,0 +1,193 @@
+{% extends "base.html" %}
+{% block title %}Nueva Entrega — Brownies{% endblock %}
+
+{% block content %}
+<div class="space-y-4">
+    <div class="flex items-center gap-3">
+        <a href="/entregas"
+            class="w-8 h-8 rounded-lg bg-chocolate-800/50 flex items-center justify-center text-chocolate-400 hover:text-chocolate-200 transition">
+            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7" />
+            </svg>
+        </a>
+        <h2 class="text-xl font-bold text-chocolate-100">Nueva Entrega</h2>
+    </div>
+
+    {% if error %}
+    <div
+        class="bg-red-500/10 border border-red-500/30 text-red-300 px-4 py-3 rounded-xl text-sm flex items-center gap-2">
+        <svg class="w-4 h-4 shrink-0" fill="currentColor" viewBox="0 0 20 20">
+            <path fill-rule="evenodd"
+                d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7 4a1 1 0 11-2 0 1 1 0 012 0zm-1-9a1 1 0 00-1 1v4a1 1 0 102 0V6a1 1 0 00-1-1z"
+                clip-rule="evenodd" />
+        </svg>
+        {{ error }}
+    </div>
+    {% endif %}
+
+    <form method="POST" action="/entregas" class="glass rounded-2xl p-5 space-y-4 card-glow" id="deliveryForm">
+        <!-- Client Selection -->
+        <div>
+            <label class="block text-chocolate-300 text-sm font-medium mb-1.5">Cliente</label>
+            <select name="client_id" id="clientSelect" required
+                class="w-full bg-chocolate-900/50 border border-chocolate-700/50 rounded-xl px-4 py-3 text-chocolate-100 focus:outline-none text-base appearance-none"
+                style="background-image: url('data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 fill=%22none%22 viewBox=%220 0 24 24%22 stroke=%22%23a8522e%22%3E%3Cpath stroke-linecap=%22round%22 stroke-linejoin=%22round%22 stroke-width=%222%22 d=%22M19 9l-7 7-7-7%22/%3E%3C/svg%3E'); background-position: right 12px center; background-size: 16px; background-repeat: no-repeat;">
+                <option value="" class="bg-chocolate-900">Selecciona un cliente</option>
+                {% for c in clients %}
+                <option value="{{ c.id }}" class="bg-chocolate-900">{{ c.name }}</option>
+                {% endfor %}
+            </select>
+        </div>
+
+        <!-- Product Type -->
+        <div>
+            <label class="block text-chocolate-300 text-sm font-medium mb-1.5">Tipo de producto</label>
+            <div class="grid grid-cols-2 gap-2">
+                <label class="relative cursor-pointer">
+                    <input type="radio" name="product_type" value="individual" class="peer sr-only" checked>
+                    <div
+                        class="peer-checked:border-chocolate-500 peer-checked:bg-chocolate-500/10 border border-chocolate-700/50 rounded-xl p-3 text-center transition">
+                        <span class="text-lg">🍫</span>
+                        <p class="text-xs font-medium text-chocolate-200 mt-1">Individual</p>
+                        <p class="text-[10px] text-chocolate-500 mt-0.5" id="priceIndividual">$—</p>
+                    </div>
+                </label>
+                <label class="relative cursor-pointer">
+                    <input type="radio" name="product_type" value="charola" class="peer sr-only">
+                    <div
+                        class="peer-checked:border-chocolate-500 peer-checked:bg-chocolate-500/10 border border-chocolate-700/50 rounded-xl p-3 text-center transition">
+                        <span class="text-lg">🫕</span>
+                        <p class="text-xs font-medium text-chocolate-200 mt-1">Charola</p>
+                        <p class="text-[10px] text-chocolate-500 mt-0.5" id="priceCharola">$—</p>
+                    </div>
+                </label>
+            </div>
+        </div>
+
+        <!-- Quantity -->
+        <div>
+            <label class="block text-chocolate-300 text-sm font-medium mb-1.5">Cantidad</label>
+            <input type="number" name="quantity" id="quantityInput" required min="1" value="1"
+                class="w-full bg-chocolate-900/50 border border-chocolate-700/50 rounded-xl px-4 py-3 text-chocolate-100 focus:outline-none text-base"
+                placeholder="1">
+        </div>
+
+        <!-- Preview Total -->
+        <div class="bg-chocolate-900/40 rounded-xl p-4 border border-chocolate-800/30">
+            <div class="flex justify-between items-center">
+                <span class="text-chocolate-400 text-sm">Total estimado</span>
+                <span class="text-xl font-bold text-chocolate-200" id="totalPreview">$0</span>
+            </div>
+            <div class="flex justify-between items-center mt-2">
+                <span class="text-chocolate-500 text-xs">Harina a descontar</span>
+                <span class="text-chocolate-400 text-xs font-medium" id="flourPreview">0 bolsas</span>
+            </div>
+        </div>
+
+        <button type="submit" class="btn-primary w-full py-3 rounded-xl font-semibold text-white text-base">
+            Registrar Entrega
+        </button>
+    </form>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+    let prices = { individual: 0, charola: 0 };
+
+    const clientSelect = document.getElementById('clientSelect');
+    const quantityInput = document.getElementById('quantityInput');
+    const priceIndividual = document.getElementById('priceIndividual');
+    const priceCharola = document.getElementById('priceCharola');
+    const totalPreview = document.getElementById('totalPreview');
+    const flourPreview = document.getElementById('flourPreview');
+
+    clientSelect.addEventListener('change', async () => {
+        const id = clientSelect.value;
+        const individualRadio = document.querySelector('input[value="individual"]');
+        const charolaRadio = document.querySelector('input[value="charola"]');
+        if (!id) {
+            prices = { individual: 0, charola: 0 };
+            priceIndividual.textContent = '$—';
+            priceCharola.textContent = '$—';
+            // disable both options when no client is selected
+            individualRadio.parentElement.style.opacity = '0.4';
+            individualRadio.disabled = true;
+            charolaRadio.parentElement.style.opacity = '0.4';
+            charolaRadio.disabled = true;
+            updatePreview();
+            return;
+        }
+        try {
+            const res = await fetch(`/api/clientes/${id}/precios`);
+            const data = await res.json();
+            prices.individual = data.price_individual;
+            prices.charola = data.price_charola;
+            priceIndividual.textContent = data.sells_individual ? `$${data.price_individual}` : '$—';
+            priceCharola.textContent = data.sells_charola ? `$${data.price_charola}` : '$—';
+            // enable/disable product type options based on what the client actually buys
+            if (data.sells_individual) {
+                individualRadio.parentElement.style.opacity = '1';
+                individualRadio.disabled = false;
+            } else {
+                individualRadio.parentElement.style.opacity = '0.4';
+                individualRadio.disabled = true;
+            }
+            if (data.sells_charola) {
+                charolaRadio.parentElement.style.opacity = '1';
+                charolaRadio.disabled = false;
+            } else {
+                charolaRadio.parentElement.style.opacity = '0.4';
+                charolaRadio.disabled = true;
+            }
+            // if current selection is disabled, switch to the other available type
+            const selected = getSelectedType();
+            if ((selected === 'individual' && !data.sells_individual) ||
+                (selected === 'charola' && !data.sells_charola)) {
+                if (data.sells_individual) individualRadio.checked = true;
+                else if (data.sells_charola) charolaRadio.checked = true;
+            }
+            updatePreview();
+        } catch (e) {
+            console.error(e);
+        }
+    });
+
+    function getSelectedType() {
+        return document.querySelector('input[name="product_type"]:checked')?.value || 'individual';
+    }
+
+    function updatePreview() {
+        const type = getSelectedType();
+        const qty = parseInt(quantityInput.value) || 0;
+        const price = type === 'individual' ? prices.individual : prices.charola;
+        const total = qty * price;
+        totalPreview.textContent = `$${total.toFixed(0)}`;
+
+        // Flour calculation: 1 individual = 2/18 bags, 1 charola = 1 bag
+        let bags = 0;
+        if (type === 'individual') {
+            bags = qty * (2 / 18);
+        } else {
+            bags = qty * 1;
+        }
+        flourPreview.textContent = `${bags.toFixed(2)} bolsas`;
+    }
+
+    quantityInput.addEventListener('input', updatePreview);
+    document.querySelectorAll('input[name="product_type"]').forEach(r => {
+        r.addEventListener('change', updatePreview);
+    });
+
+    document.addEventListener('DOMContentLoaded', () => {
+        // start with radios disabled until a client is picked
+        const individualRadio = document.querySelector('input[value="individual"]');
+        const charolaRadio = document.querySelector('input[value="charola"]');
+        individualRadio.parentElement.style.opacity = '0.4';
+        individualRadio.disabled = true;
+        charolaRadio.parentElement.style.opacity = '0.4';
+        charolaRadio.disabled = true;
+        updatePreview();
+    });
+</script>
+{% endblock %}

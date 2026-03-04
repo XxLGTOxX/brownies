@@ -1,0 +1,56 @@
+{% extends "base.html" %}
+{% block title %}Gastos — Brownies{% endblock %}
+
+{% block content %}
+<div class="space-y-4">
+    <div class="flex items-center justify-between">
+        <div>
+            <h2 class="text-xl font-bold text-chocolate-100">Gastos</h2>
+            <p class="text-chocolate-400 text-xs mt-0.5">Total: ${{ "%.0f"|format(total) }}</p>
+        </div>
+        <a href="/gastos/nuevo"
+            class="btn-primary px-4 py-2 rounded-xl text-white text-sm font-semibold flex items-center gap-1.5">
+            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4" />
+            </svg>
+            Nuevo
+        </a>
+    </div>
+
+    {% if expenses %}
+    <div class="space-y-2.5">
+        {% for e in expenses %}
+        <div class="glass rounded-xl p-4 card-glow">
+            <div class="flex items-start justify-between">
+                <div class="flex-1 min-w-0">
+                    <h3 class="font-semibold text-chocolate-100 text-sm truncate">{{ e.description }}</h3>
+                    <p class="text-chocolate-500 text-xs mt-1">
+                        📅 {{ e.date.strftime("%d/%m/%Y") }}
+                    </p>
+                </div>
+                <div class="flex items-center gap-2 ml-3">
+                    <p class="text-lg font-bold text-red-400">${{ "%.0f"|format(e.amount) }}</p>
+                    <form method="POST" action="/gastos/{{ e.id }}/eliminar"
+                        onsubmit="return confirm('¿Eliminar este gasto?')">
+                        <button type="submit"
+                            class="w-7 h-7 rounded-lg bg-red-900/30 flex items-center justify-center text-red-400 hover:text-red-300 hover:bg-red-800/40 transition">
+                            <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                    d="M6 18L18 6M6 6l12 12" />
+                            </svg>
+                        </button>
+                    </form>
+                </div>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+    {% else %}
+    <div class="glass rounded-2xl p-8 text-center card-glow">
+        <div class="text-4xl mb-3">💸</div>
+        <p class="text-chocolate-300 font-medium">Sin gastos registrados</p>
+        <p class="text-chocolate-500 text-sm mt-1">Registra tu primera compra</p>
+    </div>
+    {% endif %}
+</div>
+{% endblock %}

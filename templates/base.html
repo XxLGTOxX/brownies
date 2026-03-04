@@ -1,0 +1,315 @@
+<!DOCTYPE html>
+<html lang="es" class="h-full">
+
+<head>
+    <meta charset="UTF-8">
+    <!-- allow pinch/zoom for accessibility on phones -->
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}Brownies Manager{% endblock %}</title>
+    <meta name="description" content="Sistema de gestión de ventas de brownies — Nahomy & Gera">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        brand: {
+                            50: '#fffbeb',
+                            100: '#fef3c7',
+                            200: '#fde68a',
+                            300: '#fcd34d',
+                            400: '#fbbf24',
+                            500: '#f59e0b',
+                            600: '#d97706',
+                            700: '#b45309',
+                        },
+                        surface: {
+                            900: '#0c0a09',
+                            800: '#1c1917',
+                            700: '#292524',
+                            600: '#44403c',
+                            500: '#57534e',
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap"
+        rel="stylesheet">
+    <style>
+        * {
+            font-family: 'Plus Jakarta Sans', system-ui, sans-serif;
+        }
+
+        body {
+            background: #0c0a09;
+            padding: 0 1rem; /* some side spacing for small screens */
+        }
+
+        .card {
+            background: #1c1917;
+            border: 1px solid rgba(255, 255, 255, 0.06);
+            border-radius: 16px;
+        }
+
+        .card-hover:hover {
+            border-color: rgba(251, 191, 36, 0.15);
+            transform: translateY(-1px);
+        }
+
+        .card,
+        .card-hover {
+            transition: all 0.2s ease;
+        }
+
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 6px;
+            padding: 10px 18px;
+            border-radius: 12px;
+            font-size: 13px;
+            font-weight: 600;
+            transition: all 0.2s ease;
+            cursor: pointer;
+            border: none;
+        }
+
+        .btn-brand {
+            background: linear-gradient(135deg, #f59e0b, #d97706);
+            color: #0c0a09;
+        }
+
+        .btn-brand:hover {
+            box-shadow: 0 4px 20px rgba(245, 158, 11, 0.35);
+            transform: translateY(-1px);
+        }
+
+        .btn-green {
+            background: linear-gradient(135deg, #22c55e, #16a34a);
+            color: white;
+        }
+
+        .btn-green:hover {
+            box-shadow: 0 4px 20px rgba(34, 197, 94, 0.35);
+            transform: translateY(-1px);
+        }
+
+        .btn-red {
+            background: rgba(239, 68, 68, 0.12);
+            color: #f87171;
+        }
+
+        .btn-red:hover {
+            background: rgba(239, 68, 68, 0.2);
+        }
+
+        .btn-ghost {
+            background: rgba(255, 255, 255, 0.05);
+            color: #a8a29e;
+        }
+
+        .btn-ghost:hover {
+            background: rgba(255, 255, 255, 0.08);
+            color: #e7e5e4;
+        }
+
+        .input-field {
+            width: 100%;
+            background: rgba(255, 255, 255, 0.04);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            border-radius: 12px;
+            padding: 12px 16px;
+            color: #fafaf9;
+            font-size: 14px;
+            outline: none;
+            transition: border-color 0.2s;
+        }
+
+        .input-field::placeholder {
+            color: #78716c;
+        }
+
+        .input-field:focus {
+            border-color: #f59e0b;
+            box-shadow: 0 0 0 3px rgba(245, 158, 11, 0.1);
+        }
+
+        select.input-field {
+            appearance: none;
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' fill='%2378716c' viewBox='0 0 16 16'%3E%3Cpath d='M4.646 6.354l3 3a.5.5 0 00.708 0l3-3'/%3E%3C/svg%3E");
+            background-repeat: no-repeat;
+            background-position: right 14px center;
+            padding-right: 40px;
+        }
+
+        .label {
+            display: block;
+            font-size: 12px;
+            font-weight: 600;
+            color: #a8a29e;
+            margin-bottom: 6px;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+
+        .badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 4px;
+            padding: 3px 10px;
+            border-radius: 100px;
+            font-size: 11px;
+            font-weight: 600;
+        }
+
+        .badge-pending {
+            background: rgba(251, 191, 36, 0.12);
+            color: #fbbf24;
+        }
+
+        .badge-paid {
+            background: rgba(34, 197, 94, 0.12);
+            color: #4ade80;
+        }
+
+        .nav-tab {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 2px;
+            padding: 6px 0;
+            font-size: 10px;
+            font-weight: 500;
+            color: #57534e;
+            transition: color 0.2s;
+            text-decoration: none;
+        }
+
+        .nav-tab.active {
+            color: #fbbf24;
+        }
+
+        .nav-tab:hover {
+            color: #a8a29e;
+        }
+
+        .fade-in {
+            animation: fadeIn 0.35s ease-out;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(6px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .icon-box {
+            width: 36px;
+            height: 36px;
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+        }
+
+        .divider {
+            height: 1px;
+            background: rgba(255, 255, 255, 0.06);
+        }
+
+        .safe-bottom {
+            padding-bottom: env(safe-area-inset-bottom, 0);
+        }
+    </style>
+    {% block head %}{% endblock %}
+</head>
+
+<body class="h-full text-stone-200">
+
+    {% block body %}
+    <div class="min-h-full pb-20">
+        <!-- Header -->
+        <header class="sticky top-0 z-40 px-4 py-3 border-b border-white/[0.06]"
+            style="background: rgba(12,10,9,0.85); backdrop-filter: blur(16px); -webkit-backdrop-filter: blur(16px);">
+            <div class="max-w-lg mx-auto flex items-center justify-between">
+                <div class="flex items-center gap-2.5">
+                    <span class="text-xl">🍫</span>
+                    <span class="text-base font-bold text-brand-400">Brownies</span>
+                </div>
+                <a href="/logout" class="btn-ghost btn text-xs px-3 py-1.5">
+                    Salir
+                </a>
+            </div>
+        </header>
+
+        <!-- Content -->
+        <main class="max-w-lg mx-auto px-4 py-5 fade-in safe-bottom">
+            {% block content %}{% endblock %}
+        </main>
+
+        <!-- Bottom Nav -->
+        <nav class="fixed bottom-0 left-0 right-0 z-50 border-t border-white/[0.06] safe-bottom"
+            style="background: rgba(12,10,9,0.92); backdrop-filter: blur(16px); -webkit-backdrop-filter: blur(16px);">
+            <div class="max-w-lg mx-auto flex items-center justify-around px-2 py-1">
+                <a href="/dashboard" class="nav-tab {% if request.url.path == '/dashboard' %}active{% endif %}">
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="1.8" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round"
+                            d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6" />
+                    </svg>
+                    Inicio
+                </a>
+                <a href="/clientes" class="nav-tab {% if '/clientes' in request.url.path %}active{% endif %}">
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="1.8" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round"
+                            d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0z" />
+                    </svg>
+                    Clientes
+                </a>
+                <a href="/entregas" class="nav-tab {% if '/entregas' in request.url.path %}active{% endif %}">
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="1.8" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round"
+                            d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2" />
+                    </svg>
+                    Ventas
+                </a>
+                <a href="/gastos" class="nav-tab {% if '/gastos' in request.url.path %}active{% endif %}">
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="1.8" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round"
+                            d="M2.25 18.75a60.07 60.07 0 0115.797 2.101c.727.198 1.453-.342 1.453-1.096V18.75M3.75 4.5v.75A.75.75 0 013 6h-.75m0 0v-.375c0-.621.504-1.125 1.125-1.125H20.25M2.25 6v9m18-10.5v.75c0 .414.336.75.75.75h.75m-1.5-1.5h.375c.621 0 1.125.504 1.125 1.125v9.75c0 .621-.504 1.125-1.125 1.125h-.375m1.5-1.5H21a.75.75 0 00-.75.75v.75m0 0H3.75m0 0h-.375a1.125 1.125 0 01-1.125-1.125V15m1.5 1.5v-.75A.75.75 0 003 15h-.75M15 10.5a3 3 0 11-6 0 3 3 0 016 0zm3 0h.008v.008H18V10.5zm-12 0h.008v.008H6V10.5z" />
+                    </svg>
+                    Gastos
+                </a>
+                <a href="/corte-semanal" class="nav-tab {% if '/corte' in request.url.path %}active{% endif %}">
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="1.8" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round"
+                            d="M3 13.125C3 12.504 3.504 12 4.125 12h2.25c.621 0 1.125.504 1.125 1.125v6.75C7.5 20.496 6.996 21 6.375 21h-2.25A1.125 1.125 0 013 19.875v-6.75zM9.75 8.625c0-.621.504-1.125 1.125-1.125h2.25c.621 0 1.125.504 1.125 1.125v11.25c0 .621-.504 1.125-1.125 1.125h-2.25a1.125 1.125 0 01-1.125-1.125V8.625zM16.5 4.125c0-.621.504-1.125 1.125-1.125h2.25C20.496 3 21 3.504 21 4.125v15.75c0 .621-.504 1.125-1.125 1.125h-2.25a1.125 1.125 0 01-1.125-1.125V4.125z" />
+                    </svg>
+                    Corte
+                </a>
+                <a href="/inventario" class="nav-tab {% if '/inventario' in request.url.path %}active{% endif %}">
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="1.8" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round"
+                            d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4" />
+                    </svg>
+                    Harina
+                </a>
+            </div>
+        </nav>
+    </div>
+    {% endblock %}
+
+    {% block scripts %}{% endblock %}
+</body>
+
+</html>

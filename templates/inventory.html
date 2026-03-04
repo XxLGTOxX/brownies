@@ -1,0 +1,61 @@
+{% extends "base.html" %}
+{% block title %}Inventario — Brownies{% endblock %}
+
+{% block content %}
+<div class="space-y-5">
+    <div>
+        <h2 class="text-xl font-bold text-chocolate-100">Inventario de Harina</h2>
+        <p class="text-chocolate-400 text-xs mt-0.5">Control de bolsas</p>
+    </div>
+
+    <!-- Current Stock -->
+    <div class="glass rounded-2xl p-5 card-glow text-center">
+        <div class="text-5xl mb-2">🌾</div>
+        <p class="text-4xl font-extrabold text-chocolate-200">{{ bags }}</p>
+        <p class="text-chocolate-400 text-sm mt-1">Bolsas disponibles</p>
+
+        {% if updated_at %}
+        <p class="text-chocolate-600 text-[10px] mt-2">
+            Última actualización: {{ updated_at.strftime("%d/%m/%Y %H:%M") }}
+        </p>
+        {% endif %}
+    </div>
+
+    <!-- Production Capacity -->
+    <div class="grid grid-cols-2 gap-3">
+        <div class="glass rounded-xl p-4 card-glow text-center">
+            <p class="text-2xl font-bold text-chocolate-300">{{ possible_individuals }}</p>
+            <p class="text-chocolate-500 text-xs mt-1">🍫 Individuales posibles</p>
+            <p class="text-chocolate-600 text-[10px]">18 pcs = 2 bolsas</p>
+        </div>
+        <div class="glass rounded-xl p-4 card-glow text-center">
+            <p class="text-2xl font-bold text-chocolate-300">{{ possible_charolas }}</p>
+            <p class="text-chocolate-500 text-xs mt-1">🫕 Charolas posibles</p>
+            <p class="text-chocolate-600 text-[10px]">1 charola = 1 bolsa</p>
+        </div>
+    </div>
+
+    <!-- Adjust Inventory -->
+    <div class="glass rounded-2xl p-5 card-glow">
+        <h3 class="text-sm font-semibold text-chocolate-300 mb-3">Ajustar inventario</h3>
+        <form method="POST" action="/inventario/ajustar" class="space-y-3">
+            <div>
+                <label class="block text-chocolate-400 text-xs mb-1">Bolsas (positivo = agregar, negativo =
+                    restar)</label>
+                <input type="number" step="0.01" name="bags" required
+                    class="w-full bg-chocolate-900/50 border border-chocolate-700/50 rounded-xl px-4 py-3 text-chocolate-100 placeholder-chocolate-600 focus:outline-none text-sm"
+                    placeholder="Ej: 5 o -2">
+            </div>
+            <div>
+                <label class="block text-chocolate-400 text-xs mb-1">Motivo (opcional)</label>
+                <input type="text" name="reason"
+                    class="w-full bg-chocolate-900/50 border border-chocolate-700/50 rounded-xl px-4 py-3 text-chocolate-100 placeholder-chocolate-600 focus:outline-none text-sm"
+                    placeholder="Ej: Compra de 5 bolsas">
+            </div>
+            <button type="submit" class="btn-primary w-full py-3 rounded-xl font-semibold text-white text-sm">
+                Ajustar Stock
+            </button>
+        </form>
+    </div>
+</div>
+{% endblock %}

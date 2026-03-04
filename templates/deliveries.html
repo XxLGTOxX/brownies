@@ -1,0 +1,117 @@
+{% extends "base.html" %}
+{% block title %}Entregas — Brownies{% endblock %}
+
+{% block content %}
+<div class="space-y-4">
+    <div class="flex items-center justify-between">
+        <div>
+            <h2 class="text-xl font-bold text-chocolate-100">Entregas</h2>
+            <p class="text-chocolate-400 text-xs mt-0.5">{{ deliveries|length }} registros</p>
+        </div>
+        <a href="/entregas/nueva"
+            class="btn-primary px-4 py-2 rounded-xl text-white text-sm font-semibold flex items-center gap-1.5">
+            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4" />
+            </svg>
+            Nueva
+        </a>
+    </div>
+
+    <!-- Status Filter -->
+    <div class="flex gap-2 overflow-x-auto -mx-1 py-1">
+        <a href="/entregas?status=todas"
+            class="px-3 py-1.5 rounded-lg text-xs font-medium transition {{ 'bg-chocolate-500/30 text-chocolate-200' if current_status == 'todas' else 'bg-chocolate-900/30 text-chocolate-500 hover:text-chocolate-300' }}">
+            Todas
+        </a>
+        <a href="/entregas?status=pendiente"
+            class="px-3 py-1.5 rounded-lg text-xs font-medium transition {{ 'bg-amber-500/20 text-amber-300' if current_status == 'pendiente' else 'bg-chocolate-900/30 text-chocolate-500 hover:text-chocolate-300' }}">
+            ⏳ Pendientes
+        </a>
+        <a href="/entregas?status=pagada"
+            class="px-3 py-1.5 rounded-lg text-xs font-medium transition {{ 'bg-emerald-500/20 text-emerald-300' if current_status == 'pagada' else 'bg-chocolate-900/30 text-chocolate-500 hover:text-chocolate-300' }}">
+            ✅ Pagadas
+        </a>
+    </div>
+
+    {% if deliveries %}
+    <div class="space-y-2.5">
+        {% for d in deliveries %}
+        <div class="glass rounded-xl p-4 card-glow">
+            <div class="flex flex-col sm:flex-row items-start justify-between">
+                <div class="flex-1 min-w-0">
+                    <div class="flex items-center gap-2">
+                        <h3 class="font-semibold text-chocolate-100 text-sm truncate">{{ d.client_name }}</h3>
+                        {% if d.status == "pendiente" %}
+                        <span
+                            class="shrink-0 px-2 py-0.5 rounded-full bg-amber-500/15 text-amber-400 text-[10px] font-semibold">Pendiente</span>
+                        {% else %}
+                        <span
+                            class="shrink-0 px-2 py-0.5 rounded-full bg-emerald-500/15 text-emerald-400 text-[10px] font-semibold">Pagada</span>
+                        {% endif %}
+                    </div>
+                    <div class="flex flex-wrap items-center gap-3 mt-1.5 text-xs">
+                        <span class="text-chocolate-400">
+                            {{ d.quantity }}x {{ "Individual" if d.product_type == "individual" else "Charola" }}
+                        </span>
+                        <span class="text-chocolate-600">•</span>
+                        <span class="text-chocolate-400">${{ "%.0f"|format(d.unit_price) }} c/u</span>
+                    </div>
+                    <p class="text-chocolate-500 text-[10px] mt-1">
+                        {{ d.created_at.strftime("%d/%m/%Y %H:%M") }}
+                    </p>
+                </div>
+                <div class="text-right ml-0 sm:ml-3 mt-2 sm:mt-0">
+                    <p
+                        class="text-lg font-bold {{ 'text-emerald-400' if d.status == 'pagada' else 'text-chocolate-200' }}">
+                        ${{ "%.0f"|format(d.total) }}
+                    </p>
+                </div>
+            </div>
+
+            <!-- Actions -->
+            <div class="flex flex-col sm:flex-row items-center gap-2 mt-3 pt-3 border-t border-chocolate-800/50">
+                {% if d.status == "pendiente" %}
+                <form method="POST" action="/entregas/{{ d.id }}/pagar" class="w-full sm:flex-1">
+                    <button type="submit"
+                        class="btn-success w-full py-3 sm:py-2 rounded-lg text-white text-sm font-semibold flex items-center justify-center gap-1.5">
+                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
+                        </svg>
+                        Marcar Pagada
+                    </button>
+                </form>
+                {% else %}
+                <form method="POST" action="/entregas/{{ d.id }}/pendiente" class="w-full sm:flex-1">
+                    <button type="submit"
+                        class="btn-ghost w-full py-3 sm:py-2 rounded-lg text-chocolate-100 text-sm font-semibold flex items-center justify-center gap-1.5"
+                        onclick="return confirm('¿Marcar como pendiente?')">
+                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-7 7-7-7" />
+                        </svg>
+                        Volver a pendiente
+                    </button>
+                </form>
+                {% endif %}
+                <form method="POST" action="/entregas/{{ d.id }}/eliminar" class="w-12 flex-shrink-0"
+                    onsubmit="return confirm('¿Eliminar esta entrega?')">
+                    <button type="submit"
+                        class="w-full h-12 rounded-lg bg-red-900/30 flex items-center justify-center text-red-400 hover:text-red-300 hover:bg-red-800/40 transition">
+                        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
+                        </svg>
+                    </button>
+                </form>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+    {% else %}
+    <div class="glass rounded-2xl p-8 text-center card-glow">
+        <div class="text-4xl mb-3">📦</div>
+        <p class="text-chocolate-300 font-medium">Sin entregas</p>
+        <p class="text-chocolate-500 text-sm mt-1">Registra tu primera entrega</p>
+    </div>
+    {% endif %}
+</div>
+{% endblock %}

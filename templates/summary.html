@@ -1,0 +1,122 @@
+{% extends "base.html" %}
+{% block title %}Corte Semanal — Brownies{% endblock %}
+
+{% block content %}
+<div class="space-y-5">
+    <div>
+        <h2 class="text-xl font-bold text-chocolate-100">Corte Semanal</h2>
+        <p class="text-chocolate-400 text-xs mt-0.5">Utilidad y reparto</p>
+    </div>
+
+    <!-- Week Navigation -->
+    <div class="flex items-center justify-between glass rounded-xl px-4 py-3">
+        <a href="/corte-semanal?semana={{ prev_week }}"
+            class="w-8 h-8 rounded-lg bg-chocolate-800/50 flex items-center justify-center text-chocolate-400 hover:text-chocolate-200 transition">
+            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7" />
+            </svg>
+        </a>
+        <div class="text-center">
+            <p class="text-chocolate-200 text-sm font-semibold">
+                {{ monday.strftime("%d/%m") }} — {{ sunday.strftime("%d/%m/%Y") }}
+            </p>
+            <p class="text-chocolate-500 text-[10px]">Lunes a Domingo</p>
+        </div>
+        <a href="/corte-semanal?semana={{ next_week }}"
+            class="w-8 h-8 rounded-lg bg-chocolate-800/50 flex items-center justify-center text-chocolate-400 hover:text-chocolate-200 transition">
+            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
+            </svg>
+        </a>
+    </div>
+
+    <!-- Summary Cards -->
+    <div class="grid grid-cols-3 gap-2">
+        <div class="glass rounded-xl p-3 card-glow text-center">
+            <p class="text-emerald-400 text-lg font-bold">${{ "%.0f"|format(total_sales) }}</p>
+            <p class="text-chocolate-500 text-[10px] mt-0.5">Ventas</p>
+        </div>
+        <div class="glass rounded-xl p-3 card-glow text-center">
+            <p class="text-red-400 text-lg font-bold">${{ "%.0f"|format(total_expenses) }}</p>
+            <p class="text-chocolate-500 text-[10px] mt-0.5">Gastos</p>
+        </div>
+        <div class="glass rounded-xl p-3 card-glow text-center">
+            <p class="text-lg font-bold {{ 'text-emerald-400' if net_profit >= 0 else 'text-red-400' }}">${{
+                "%.0f"|format(net_profit) }}</p>
+            <p class="text-chocolate-500 text-[10px] mt-0.5">Utilidad</p>
+        </div>
+    </div>
+
+    <!-- Profit Split -->
+    <div class="glass rounded-2xl p-5 card-glow">
+        <h3 class="text-sm font-semibold text-chocolate-300 mb-3 text-center">💰 Reparto de Utilidad</h3>
+        <div class="grid grid-cols-2 gap-4">
+            <div class="text-center">
+                <div class="w-12 h-12 rounded-full bg-purple-500/15 flex items-center justify-center mx-auto mb-2">
+                    <span class="text-lg">👩</span>
+                </div>
+                <p class="text-chocolate-200 font-semibold text-sm">Nahomy</p>
+                <p class="text-xl font-bold {{ 'text-emerald-400' if nahomy >= 0 else 'text-red-400' }}">
+                    ${{ "%.0f"|format(nahomy) }}
+                </p>
+            </div>
+            <div class="text-center">
+                <div class="w-12 h-12 rounded-full bg-blue-500/15 flex items-center justify-center mx-auto mb-2">
+                    <span class="text-lg">👨</span>
+                </div>
+                <p class="text-chocolate-200 font-semibold text-sm">Gera</p>
+                <p class="text-xl font-bold {{ 'text-emerald-400' if gera >= 0 else 'text-red-400' }}">
+                    ${{ "%.0f"|format(gera) }}
+                </p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Paid Deliveries Detail -->
+    <div>
+        <h3 class="text-sm font-semibold text-chocolate-300 mb-2">✅ Ventas Pagadas ({{ paid_deliveries|length }})</h3>
+        {% if paid_deliveries %}
+        <div class="space-y-2">
+            {% for d in paid_deliveries %}
+            <div class="glass rounded-xl px-4 py-3 card-glow flex items-center justify-between">
+                <div class="min-w-0">
+                    <p class="text-chocolate-200 text-sm font-medium truncate">{{ d.client_name }}</p>
+                    <p class="text-chocolate-500 text-[10px]">
+                        {{ d.quantity }}x {{ "Individual" if d.product_type == "individual" else "Charola" }}
+                        · {{ d.paid_at.strftime("%d/%m") if d.paid_at else "" }}
+                    </p>
+                </div>
+                <p class="text-emerald-400 font-bold text-sm ml-2">${{ "%.0f"|format(d.total) }}</p>
+            </div>
+            {% endfor %}
+        </div>
+        {% else %}
+        <div class="glass rounded-xl p-4 text-center text-chocolate-500 text-sm">
+            Sin ventas pagadas esta semana
+        </div>
+        {% endif %}
+    </div>
+
+    <!-- Expenses Detail -->
+    <div>
+        <h3 class="text-sm font-semibold text-chocolate-300 mb-2">💸 Gastos ({{ expenses|length }})</h3>
+        {% if expenses %}
+        <div class="space-y-2">
+            {% for e in expenses %}
+            <div class="glass rounded-xl px-4 py-3 card-glow flex items-center justify-between">
+                <div class="min-w-0">
+                    <p class="text-chocolate-200 text-sm font-medium truncate">{{ e.description }}</p>
+                    <p class="text-chocolate-500 text-[10px]">{{ e.date.strftime("%d/%m/%Y") }}</p>
+                </div>
+                <p class="text-red-400 font-bold text-sm ml-2">${{ "%.0f"|format(e.amount) }}</p>
+            </div>
+            {% endfor %}
+        </div>
+        {% else %}
+        <div class="glass rounded-xl p-4 text-center text-chocolate-500 text-sm">
+            Sin gastos esta semana
+        </div>
+        {% endif %}
+    </div>
+</div>
+{% endblock %}
