@@ -1,6 +1,8 @@
 from fastapi import APIRouter, Request, Form
 from fastapi.responses import RedirectResponse, HTMLResponse
 from fastapi.templating import Jinja2Templates
+import math
+
 from config import ADMIN_USER, ADMIN_PASS, get_db
 
 router = APIRouter(tags=["auth"])
@@ -55,6 +57,8 @@ async def dashboard(request: Request):
 
     inv = await db.inventory.find_one({"item": "harina"})
     bags = inv["bags"] if inv else 0
+    # Floor to ensure integer display
+    bags = math.floor(bags)
 
     # Get recent deliveries for activity feed
     recent = await db.deliveries.find().sort("created_at", -1).to_list(5)
@@ -67,6 +71,6 @@ async def dashboard(request: Request):
         "total_clients": total_clients,
         "pending_deliveries": pending_deliveries,
         "pending_total": pending_total,
-        "bags": round(bags, 2),
+        "bags": bags,
         "recent": recent
     })
