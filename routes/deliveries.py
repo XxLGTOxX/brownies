@@ -113,19 +113,8 @@ async def create_delivery(
         "created_at": now_local()
     })
 
-    inv = await db.inventory.find_one({"item": "harina"})
-    if inv:
-        new_bags = max(0, inv["bags"] - bags_used)
-        await db.inventory.update_one(
-            {"item": "harina"},
-            {"$set": {"bags": new_bags, "updated_at": now_local()}}
-        )
-    else:
-        await db.inventory.insert_one({
-            "item": "harina",
-            "bags": max(0, -bags_used),
-            "updated_at": now_local()
-        })
+# Inventory is managed manually via the /inventario endpoints.
+# Do not automatically decrement inventory on delivery creation anymore.
 
     return RedirectResponse(url="/entregas", status_code=302)
 
