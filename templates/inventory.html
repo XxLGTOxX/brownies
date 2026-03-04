@@ -37,25 +37,90 @@
 
     <!-- Adjust Inventory -->
     <div class="glass rounded-2xl p-5 card-glow">
-        <h3 class="text-sm font-semibold text-chocolate-300 mb-3">Ajustar inventario</h3>
-        <form method="POST" action="/inventario/ajustar" class="space-y-3">
+        <h3 class="text-sm font-semibold text-stone-300 mb-4">Ajustar inventario</h3>
+        
+        <!-- Tabs: Add or Set -->
+        <div class="flex gap-2 mb-4">
+            <button type="button" class="tab-btn flex-1 py-2 px-3 rounded-lg text-sm font-medium transition" data-mode="add"
+                style="background: rgba(245,158,11,0.2); color: #fbbf24; border: 1px solid rgba(245,158,11,0.3);">
+                ➕ Agregar bolsas
+            </button>
+            <button type="button" class="tab-btn flex-1 py-2 px-3 rounded-lg text-sm font-medium transition" data-mode="set"
+                style="background: rgba(255,255,255,0.04); color: #a8a29e; border: 1px solid rgba(255,255,255,0.08);">
+                ✏️ Establecer cantidad
+            </button>
+        </div>
+
+        <!-- Add Mode -->
+        <form method="POST" action="/inventario/ajustar" class="space-y-3 tab-form" data-mode="add">
             <div>
-                <label class="block text-chocolate-400 text-xs mb-1">Bolsas (positivo = agregar, negativo =
-                    restar)</label>
-                <input type="number" step="0.01" name="bags" required
-                    class="w-full bg-chocolate-900/50 border border-chocolate-700/50 rounded-xl px-4 py-3 text-chocolate-100 placeholder-chocolate-600 focus:outline-none text-sm"
-                    placeholder="Ej: 5 o -2">
+                <label class="label">Bolsas a agregar</label>
+                <input type="number" step="1" name="bags" required min="0"
+                    class="input-field"
+                    placeholder="Ej: 5">
             </div>
             <div>
-                <label class="block text-chocolate-400 text-xs mb-1">Motivo (opcional)</label>
+                <label class="label">Motivo (opcional)</label>
                 <input type="text" name="reason"
-                    class="w-full bg-chocolate-900/50 border border-chocolate-700/50 rounded-xl px-4 py-3 text-chocolate-100 placeholder-chocolate-600 focus:outline-none text-sm"
-                    placeholder="Ej: Compra de 5 bolsas">
+                    class="input-field"
+                    placeholder="Ej: Compra nueva">
             </div>
-            <button type="submit" class="btn-primary w-full py-3 rounded-xl font-semibold text-white text-sm">
-                Ajustar Stock
+            <button type="submit" class="btn-brand w-full py-2 px-4 rounded-lg font-medium text-sm">
+                Agregar bolsas
+            </button>
+        </form>
+
+        <!-- Set Mode -->
+        <form method="POST" action="/inventario/establecer" class="space-y-3 tab-form hidden" data-mode="set">
+            <div>
+                <label class="label">Cantidad total de bolsas</label>
+                <input type="number" step="1" name="bags" required min="0"
+                    class="input-field"
+                    placeholder="Ej: {{ bags }}">
+            </div>
+            <div>
+                <label class="label">Motivo (opcional)</label>
+                <input type="text" name="reason"
+                    class="input-field"
+                    placeholder="Ej: Inventario físico revisado">
+            </div>
+            <button type="submit" class="btn-green w-full py-2 px-4 rounded-lg font-medium text-sm">
+                Establecer cantidad
             </button>
         </form>
     </div>
+
+    <script>
+        const tabBtns = document.querySelectorAll('.tab-btn');
+        const tabForms = document.querySelectorAll('.tab-form');
+
+        tabBtns.forEach(btn => {
+            btn.addEventListener('click', () => {
+                const mode = btn.dataset.mode;
+                
+                // Update button styles
+                tabBtns.forEach(b => {
+                    if (b.dataset.mode === mode) {
+                        b.style.background = 'rgba(245,158,11,0.2)';
+                        b.style.color = '#fbbf24';
+                        b.style.border = '1px solid rgba(245,158,11,0.3)';
+                    } else {
+                        b.style.background = 'rgba(255,255,255,0.04)';
+                        b.style.color = '#a8a29e';
+                        b.style.border = '1px solid rgba(255,255,255,0.08)';
+                    }
+                });
+
+                // Show/hide forms
+                tabForms.forEach(form => {
+                    if (form.dataset.mode === mode) {
+                        form.classList.remove('hidden');
+                    } else {
+                        form.classList.add('hidden');
+                    }
+                });
+            });
+        });
+    </script>
 </div>
 {% endblock %}

@@ -28,20 +28,18 @@
     <form method="POST" action="/entregas" class="glass rounded-2xl p-5 space-y-4 card-glow" id="deliveryForm">
         <!-- Client Selection -->
         <div>
-            <label class="block text-chocolate-300 text-sm font-medium mb-1.5">Cliente</label>
-            <select name="client_id" id="clientSelect" required
-                class="w-full bg-chocolate-900/50 border border-chocolate-700/50 rounded-xl px-4 py-3 text-chocolate-100 focus:outline-none text-base appearance-none"
-                style="background-image: url('data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 fill=%22none%22 viewBox=%220 0 24 24%22 stroke=%22%23a8522e%22%3E%3Cpath stroke-linecap=%22round%22 stroke-linejoin=%22round%22 stroke-width=%222%22 d=%22M19 9l-7 7-7-7%22/%3E%3C/svg%3E'); background-position: right 12px center; background-size: 16px; background-repeat: no-repeat;">
-                <option value="" class="bg-chocolate-900">Selecciona un cliente</option>
+            <label class="label">Cliente</label>
+            <select name="client_id" id="clientSelect" required class="input-field">
+                <option value="">Selecciona un cliente</option>
                 {% for c in clients %}
-                <option value="{{ c.id }}" class="bg-chocolate-900">{{ c.name }}</option>
+                <option value="{{ c.id }}">{{ c.name }}</option>
                 {% endfor %}
             </select>
         </div>
 
         <!-- Product Type -->
         <div>
-            <label class="block text-chocolate-300 text-sm font-medium mb-1.5">Tipo de producto</label>
+            <label class="label">Tipo de producto</label>
             <div class="grid grid-cols-2 gap-2">
                 <label class="relative cursor-pointer">
                     <input type="radio" name="product_type" value="individual" class="peer sr-only" checked>
@@ -66,10 +64,8 @@
 
         <!-- Quantity -->
         <div>
-            <label class="block text-chocolate-300 text-sm font-medium mb-1.5">Cantidad</label>
-            <input type="number" name="quantity" id="quantityInput" required min="1" value="1"
-                class="w-full bg-chocolate-900/50 border border-chocolate-700/50 rounded-xl px-4 py-3 text-chocolate-100 focus:outline-none text-base"
-                placeholder="1">
+            <label class="label">Cantidad</label>
+            <input type="number" name="quantity" id="quantityInput" required min="1" value="1" class="input-field" placeholder="1">
         </div>
 
         <!-- Preview Total -->

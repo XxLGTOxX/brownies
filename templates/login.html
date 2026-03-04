@@ -108,22 +108,18 @@
 
             <form method="POST" action="/login" class="space-y-4">
                 <div>
-                    <label class="block text-chocolate-300 text-sm font-medium mb-1.5">Usuario</label>
+                    <label class="label">Usuario</label>
                     <input type="text" name="username" required autocomplete="username"
-                        class="w-full bg-chocolate-900/50 border border-chocolate-700/50 rounded-xl px-4 py-3 text-chocolate-100 placeholder-chocolate-600 focus:outline-none text-sm"
+                        class="input-field"
                         placeholder="Ingresa tu usuario">
                 </div>
                 <div>
-                    <label class="block text-chocolate-300 text-sm font-medium mb-1.5">Contraseña</label>
+                    <label class="label">Contraseña</label>
                     <input type="password" name="password" required autocomplete="current-password"
-                        class="w-full bg-chocolate-900/50 border border-chocolate-700/50 rounded-xl px-4 py-3 text-chocolate-100 placeholder-chocolate-600 focus:outline-none text-sm"
+                        class="input-field"
                         placeholder="••••••••">
                 </div>
-                <button type="submit"
-                    class="w-full py-3 rounded-xl font-semibold text-white text-sm transition-all duration-300"
-                    style="background: linear-gradient(135deg, #c4693d, #a8522e);"
-                    onmouseover="this.style.background='linear-gradient(135deg, #dc8e64, #c4693d)'"
-                    onmouseout="this.style.background='linear-gradient(135deg, #c4693d, #a8522e)'">
+                <button type="submit" class="btn-brand w-full py-2 px-4 rounded-lg font-medium text-sm">
                     Iniciar Sesión
                 </button>
             </form>
