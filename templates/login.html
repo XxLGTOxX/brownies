@@ -1,9 +1,9 @@
 <!DOCTYPE html>
-<html lang="es" class="h-full">
+<html lang="es" style="height: 100%; width: 100%; margin: 0; padding: 0; background: #0f172a;">
 
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
     <title>Login — Brownies Manager</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script>
@@ -29,15 +29,33 @@
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap"
         rel="stylesheet">
     <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
         html {
+            height: 100%;
+            width: 100%;
             background: #0f172a;
         }
 
         body {
             font-family: 'Inter', system-ui, sans-serif;
-            background: linear-gradient(to bottom right, #0f172a, #0e1b2e, #0f172a) !important;
-            min-height: 100vh;
-            min-height: 100dvh;
+            background: linear-gradient(135deg, #0f172a 0%, #0e1b2e 50%, #0f172a 100%) !important;
+            height: 100%;
+            width: 100%;
+            overflow: hidden;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 1rem;
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
         }
 
         .glass-card {
