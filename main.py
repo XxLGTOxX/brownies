@@ -25,7 +25,7 @@ app.add_middleware(SessionMiddleware, secret_key=SECRET_KEY)
 # The `static` directory is included in the repository. Avoid creating
 # directories at import time because Vercel's serverless runtime has a
 # read-only filesystem. If runtime writes are needed use `/tmp` instead.
-app.mount("/static", StaticFiles(directory="static"), name="static")
+app.mount("/static", StaticFiles(directory="static", check_dir=False), name="static")
 
 # Templates
 templates = Jinja2Templates(directory="templates")
