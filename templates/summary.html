@@ -91,7 +91,7 @@
             {% endfor %}
         </div>
         {% else %}
-        <div class="glass rounded-xl p-4 text-center text-chocolate-500 text-sm">
+        <div class="glass rounded-xl p-4 text-center text-slate-400 text-sm">
             Sin ventas pagadas esta semana
         </div>
         {% endif %}
@@ -99,21 +99,21 @@
 
     <!-- Expenses Detail -->
     <div>
-        <h3 class="text-sm font-semibold text-chocolate-300 mb-2">💸 Gastos ({{ expenses|length }})</h3>
+        <h3 class="text-sm font-semibold text-slate-300 mb-2">💸 Gastos ({{ expenses|length }})</h3>
         {% if expenses %}
         <div class="space-y-2">
             {% for e in expenses %}
             <div class="glass rounded-xl px-4 py-3 card-glow flex items-center justify-between">
                 <div class="min-w-0">
-                    <p class="text-chocolate-200 text-sm font-medium truncate">{{ e.description }}</p>
-                    <p class="text-chocolate-500 text-[10px]">{{ e.date.strftime("%d/%m/%Y") }}</p>
+                    <p class="text-slate-200 text-sm font-medium truncate">{{ e.description }}</p>
+                    <p class="text-slate-400 text-[10px]">{{ e.date.strftime("%d/%m/%Y") }}</p>
                 </div>
                 <p class="text-red-400 font-bold text-sm ml-2">${{ "%.0f"|format(e.amount) }}</p>
             </div>
             {% endfor %}
         </div>
         {% else %}
-        <div class="glass rounded-xl p-4 text-center text-chocolate-500 text-sm">
+        <div class="glass rounded-xl p-4 text-center text-slate-400 text-sm">
             Sin gastos esta semana
         </div>
         {% endif %}

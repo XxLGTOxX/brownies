@@ -11,10 +11,15 @@
             theme: {
                 extend: {
                     colors: {
-                        chocolate: {
-                            50: '#fdf8f6', 100: '#f9ece4', 200: '#f3d5c4', 300: '#e8b596',
-                            400: '#dc8e64', 500: '#c4693d', 600: '#a8522e', 700: '#8b4028',
-                            800: '#6d3422', 900: '#4a251a', 950: '#2d1610',
+                        brand: {
+                            50: '#eff6ff',
+                            100: '#dbeafe',
+                            200: '#bfdbfe',
+                            300: '#93c5fd',
+                            400: '#60a5fa',
+                            500: '#3b82f6',
+                            600: '#2563eb',
+                            700: '#1d4ed8',
                         }
                     }
                 }
@@ -29,18 +34,15 @@
         }
 
         .glass-card {
-            background: rgba(45, 22, 16, 0.7);
+            background: rgba(30, 41, 59, 0.6);
             backdrop-filter: blur(24px);
-            border: 1px solid rgba(200, 130, 80, 0.2);
+            border: 1px solid rgba(59, 130, 246, 0.15);
         }
 
         @keyframes float {
-
-            0%,
-            100% {
+            0%, 100% {
                 transform: translateY(0px) rotate(0deg);
             }
-
             50% {
                 transform: translateY(-10px) rotate(5deg);
             }
@@ -55,7 +57,6 @@
                 opacity: 0;
                 transform: translateY(20px);
             }
-
             to {
                 opacity: 1;
                 transform: translateY(0);
@@ -73,23 +74,22 @@
     </style>
 </head>
 
-<body class="h-full bg-chocolate-950 flex items-center justify-center p-4">
+<body class="h-full bg-slate-950 flex items-center justify-center p-4">
     <!-- Background glow -->
     <div class="fixed inset-0 overflow-hidden pointer-events-none">
-        <div class="absolute top-1/4 left-1/2 -translate-x-1/2 w-96 h-96 bg-chocolate-700/20 rounded-full blur-[100px]">
+        <div class="absolute top-1/4 left-1/2 -translate-x-1/2 w-96 h-96 bg-blue-500/10 rounded-full blur-[100px]">
         </div>
-        <div class="absolute bottom-0 left-0 w-64 h-64 bg-chocolate-800/15 rounded-full blur-[80px]"></div>
+        <div class="absolute bottom-0 left-0 w-64 h-64 bg-blue-500/5 rounded-full blur-[80px]"></div>
     </div>
 
     <div class="w-full max-w-sm relative z-10">
         <!-- Logo/Brand -->
         <div class="text-center mb-8 fade-up">
             <div class="text-6xl mb-3 float-anim inline-block">🍫</div>
-            <h1
-                class="text-3xl font-extrabold bg-gradient-to-r from-chocolate-200 to-chocolate-500 bg-clip-text text-transparent">
+            <h1 class="text-3xl font-extrabold bg-gradient-to-r from-blue-200 to-blue-400 bg-clip-text text-transparent">
                 Brownies Manager
             </h1>
-            <p class="text-chocolate-400 text-sm mt-1">Gestión de ventas</p>
+            <p class="text-slate-400 text-sm mt-1">Gestión de ventas</p>
         </div>
 
         <!-- Login Card -->
@@ -125,7 +125,7 @@
             </form>
         </div>
 
-        <p class="text-center text-chocolate-600 text-xs mt-6">
+        <p class="text-center text-slate-500 text-xs mt-6">
             Nahomy & Gera © 2026
         </p>
     </div>

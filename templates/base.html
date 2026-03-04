@@ -14,21 +14,21 @@
                 extend: {
                     colors: {
                         brand: {
-                            50: '#fffbeb',
-                            100: '#fef3c7',
-                            200: '#fde68a',
-                            300: '#fcd34d',
-                            400: '#fbbf24',
-                            500: '#f59e0b',
-                            600: '#d97706',
-                            700: '#b45309',
+                            50: '#eff6ff',
+                            100: '#dbeafe',
+                            200: '#bfdbfe',
+                            300: '#93c5fd',
+                            400: '#60a5fa',
+                            500: '#3b82f6',
+                            600: '#2563eb',
+                            700: '#1d4ed8',
                         },
                         surface: {
-                            900: '#0c0a09',
-                            800: '#1c1917',
-                            700: '#292524',
-                            600: '#44403c',
-                            500: '#57534e',
+                            900: '#0f172a',
+                            800: '#1e293b',
+                            700: '#334155',
+                            600: '#475569',
+                            500: '#64748b',
                         }
                     }
                 }
@@ -44,18 +44,18 @@
         }
 
         body {
-            background: #0c0a09;
+            background: #0f172a;
             padding: 0 1rem; /* some side spacing for small screens */
         }
 
         .card {
-            background: #1c1917;
-            border: 1px solid rgba(255, 255, 255, 0.06);
+            background: #1e293b;
+            border: 1px solid rgba(148, 163, 184, 0.15);
             border-radius: 16px;
         }
 
         .card-hover:hover {
-            border-color: rgba(251, 191, 36, 0.15);
+            border-color: rgba(59, 130, 246, 0.25);
             transform: translateY(-1px);
         }
 
@@ -79,12 +79,12 @@
         }
 
         .btn-brand {
-            background: linear-gradient(135deg, #f59e0b, #d97706);
-            color: #0c0a09;
+            background: linear-gradient(135deg, #3b82f6, #2563eb);
+            color: white;
         }
 
         .btn-brand:hover {
-            box-shadow: 0 4px 20px rgba(245, 158, 11, 0.35);
+            box-shadow: 0 4px 20px rgba(59, 130, 246, 0.4);
             transform: translateY(-1px);
         }
 
@@ -108,34 +108,34 @@
         }
 
         .btn-ghost {
-            background: rgba(255, 255, 255, 0.05);
-            color: #a8a29e;
+            background: rgba(148, 163, 184, 0.08);
+            color: #cbd5e1;
         }
 
         .btn-ghost:hover {
-            background: rgba(255, 255, 255, 0.08);
-            color: #e7e5e4;
+            background: rgba(148, 163, 184, 0.12);
+            color: #f1f5f9;
         }
 
         .input-field {
             width: 100%;
-            background: rgba(255, 255, 255, 0.04);
-            border: 1px solid rgba(255, 255, 255, 0.08);
+            background: rgba(30, 41, 59, 0.5);
+            border: 1px solid rgba(148, 163, 184, 0.2);
             border-radius: 12px;
             padding: 12px 16px;
-            color: #fafaf9;
+            color: #f1f5f9;
             font-size: 14px;
             outline: none;
             transition: border-color 0.2s;
         }
 
         .input-field::placeholder {
-            color: #78716c;
+            color: #94a3b8;
         }
 
         .input-field:focus {
-            border-color: #f59e0b;
-            box-shadow: 0 0 0 3px rgba(245, 158, 11, 0.1);
+            border-color: #3b82f6;
+            box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
         }
 
         select.input-field {
@@ -150,7 +150,7 @@
             display: block;
             font-size: 12px;
             font-weight: 600;
-            color: #a8a29e;
+            color: #cbd5e1;
             margin-bottom: 6px;
             text-transform: uppercase;
             letter-spacing: 0.05em;
@@ -167,12 +167,12 @@
         }
 
         .badge-pending {
-            background: rgba(251, 191, 36, 0.12);
-            color: #fbbf24;
+            background: rgba(59, 130, 246, 0.15);
+            color: #60a5fa;
         }
 
         .badge-paid {
-            background: rgba(34, 197, 94, 0.12);
+            background: rgba(34, 197, 94, 0.15);
             color: #4ade80;
         }
 
@@ -184,17 +184,17 @@
             padding: 6px 0;
             font-size: 10px;
             font-weight: 500;
-            color: #57534e;
+            color: #64748b;
             transition: color 0.2s;
             text-decoration: none;
         }
 
         .nav-tab.active {
-            color: #fbbf24;
+            color: #60a5fa;
         }
 
         .nav-tab:hover {
-            color: #a8a29e;
+            color: #94a3b8;
         }
 
         .fade-in {
@@ -213,6 +213,21 @@
             }
         }
 
+        .glass {
+            background: rgba(30, 41, 59, 0.5);
+            backdrop-filter: blur(8px);
+            border: 1px solid rgba(148, 163, 184, 0.15);
+        }
+
+        .card-glow {
+            transition: all 0.3s ease;
+        }
+
+        .card-glow:hover {
+            border-color: rgba(59, 130, 246, 0.25);
+            transform: translateY(-2px);
+        }
+
         .icon-box {
             width: 36px;
             height: 36px;
@@ -225,7 +240,7 @@
 
         .divider {
             height: 1px;
-            background: rgba(255, 255, 255, 0.06);
+            background: rgba(148, 163, 184, 0.1);
         }
 
         .safe-bottom {
@@ -240,12 +255,12 @@
     {% block body %}
     <div class="min-h-full pb-20">
         <!-- Header -->
-        <header class="sticky top-0 z-40 px-4 py-3 border-b border-white/[0.06]"
-            style="background: rgba(12,10,9,0.85); backdrop-filter: blur(16px); -webkit-backdrop-filter: blur(16px);">
+        <header class="sticky top-0 z-40 px-4 py-3 border-b border-slate-700/40"
+            style="background: rgba(15,23,42,0.90); backdrop-filter: blur(16px); -webkit-backdrop-filter: blur(16px);">
             <div class="max-w-lg mx-auto flex items-center justify-between">
                 <div class="flex items-center gap-2.5">
                     <span class="text-xl">🍫</span>
-                    <span class="text-base font-bold text-brand-400">Brownies</span>
+                    <span class="text-base font-bold text-blue-400">Brownies</span>
                 </div>
                 <a href="/logout" class="btn-ghost btn text-xs px-3 py-1.5">
                     Salir
@@ -259,8 +274,8 @@
         </main>
 
         <!-- Bottom Nav -->
-        <nav class="fixed bottom-0 left-0 right-0 z-50 border-t border-white/[0.06] safe-bottom"
-            style="background: rgba(12,10,9,0.92); backdrop-filter: blur(16px); -webkit-backdrop-filter: blur(16px);">
+        <nav class="fixed bottom-0 left-0 right-0 z-50 border-t border-slate-700/40 safe-bottom"
+            style="background: rgba(15,23,42,0.92); backdrop-filter: blur(16px); -webkit-backdrop-filter: blur(16px);">
             <div class="max-w-lg mx-auto flex items-center justify-around px-2 py-1">
                 <a href="/dashboard" class="nav-tab {% if request.url.path == '/dashboard' %}active{% endif %}">
                     <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="1.8" viewBox="0 0 24 24">
